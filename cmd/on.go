@@ -1,19 +1,9 @@
 package cmd
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/awh/egctl/pkg/energenie"
 	"github.com/spf13/cobra"
-	"github.com/stianeikeland/go-rpio"
 )
-
-var onCodes = map[string][4]rpio.State{
-	"one":   [4]rpio.State{rpio.High, rpio.High, rpio.High, rpio.High},
-	"two":   [4]rpio.State{rpio.High, rpio.High, rpio.High, rpio.Low},
-	"three": [4]rpio.State{rpio.High, rpio.High, rpio.Low, rpio.High},
-	"four":  [4]rpio.State{rpio.High, rpio.High, rpio.Low, rpio.Low},
-	"all":   [4]rpio.State{rpio.High, rpio.Low, rpio.High, rpio.High},
-}
 
 // onCmd represents the on command
 var onCmd = &cobra.Command{
@@ -26,18 +16,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) != 1 {
-			log.Fatalf("socket argument required")
-		}
-
-		if code, ok := onCodes[args[0]]; ok {
-			if err := energenie.Execute(code); err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			log.Fatalf("bad socket argument")
-		}
-
+		energenie.On(args...)
 	},
 }
 
